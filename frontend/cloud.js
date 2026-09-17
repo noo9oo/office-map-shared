@@ -26,7 +26,7 @@ function applySnapshot(snapshot,force=false){
 function editing(){return !!document.querySelector('dialog[open]')||!!pendingAsset||!!drag;}
 function receive(args){
  const snapshot=args.snapshot,ack=args.ack;
- if(args.error){$('saveStatus').textContent=args.error;$('saveStatus').classList.add('error');if(!cloud.ready)block('공용 자료 연결을 기다리고 있습니다…');return;}
+ if(args.error){$('saveStatus').textContent=args.error;$('saveStatus').classList.add('error');block(args.error+' · 약 8초마다 다시 확인합니다.');return;}
  if(!snapshot)return;
  if(cloud.pending&&ack?.id===cloud.pending.request.id){
   const draft=cloud.pending.draft;cloud.pending=null;
