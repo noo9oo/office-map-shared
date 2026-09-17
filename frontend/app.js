@@ -8,8 +8,8 @@ const CABINETS=[
  {id:3,x:37,y:497,w:22,d:14,location:'이정우 좌석 아래 · 가운데'},
  {id:4,x:60,y:497,w:22,d:14,location:'이정우 좌석 아래 · 오른쪽'},
  {id:5,x:158,y:541,w:33,d:16,location:'공석 위 · 회의공간 아래'},
- {id:6,x:193,y:523,w:14,d:16,location:'박승재 좌석 왼쪽 · 위쪽'},
- {id:7,x:193,y:540,w:14,d:16,location:'박승재 좌석 왼쪽 · 아래쪽'},
+ {id:6,x:120,y:523,w:14,d:16,location:'박승재 좌석 왼쪽 · 위쪽'},
+ {id:7,x:120,y:540,w:14,d:16,location:'박승재 좌석 왼쪽 · 아래쪽'},
  {id:8,x:140,y:638,w:23,d:16,location:'실장실 앞 · 왼쪽'},
  {id:9,x:165,y:638,w:23,d:16,location:'실장실 앞 · 가운데'},
  {id:10,x:190,y:638,w:23,d:16,location:'실장실 앞 · 오른쪽'}
@@ -23,7 +23,7 @@ const SEATS=[
  {name:'김정우',x:52,y:701,w:25,d:47,cx:43,cy:727},
  {name:'최진욱',x:145,y:397,w:48,d:25,cx:169,cy:385},
  {name:'함주영',x:213,y:369,w:25,d:48,cx:245,cy:395},
- {name:'권혁연',x:213,y:439,w:25,d:48,cx:245,cy:465},
+ {name:'권혜연',x:213,y:439,w:25,d:48,cx:245,cy:465},
  {name:'박승재',x:213,y:508,w:25,d:48,cx:245,cy:534},
  {name:'공석',x:156,y:563,w:48,d:25,cx:180,cy:597},
  {name:'오정수',x:213,y:563,w:48,d:25,cx:237,cy:597},
@@ -210,7 +210,24 @@ function renderMap(){
   add(xx,yy,ww,dd,html,`class="${kind}"`);
  }}
  parts.forEach(v=>wall(...v,40,'partition'));
- wall(11,start,3,755-start,9,'outer-wall');wall(296,start,3,755-start,9,'outer-wall');
+wall(11,start,3,513-start,9,'outer-wall');
+ wall(11,533,3,755-533,9,'outer-wall');
+ wall(296,start,3,755-start,9,'outer-wall');
+
+ // 문턱과 열린 문
+ floor+=line([14,513],[14,533],'#8aa393',.8,'3 2');
+ floor+=line([14,533],[34,533],'#7e9886',1.8);
+
+ // 문이 열리는 방향
+ for(let i=0;i<16;i++){
+  const a=-Math.PI/2+i*Math.PI/32,b=a+Math.PI/32;
+  floor+=line(
+   [14+20*Math.cos(a),533+20*Math.sin(a)],
+   [14+20*Math.cos(b),533+20*Math.sin(b)],
+   '#8aa393',.6
+  );
+ }
+ labels.push(label('문',29,522,0));
  for(let yy=start+8;yy<744;yy+=31)add(297,yy,1,23,box(297,yy,1,23,11,'#d7e9de','#bcd8c4','#accbb4','',9));
  if(full)wall(14,15,283,3,12,'outer-wall');
  // Cabinets 8–10 are outside the north-facing room wall; the manager sits south of it.
@@ -222,7 +239,6 @@ function renderMap(){
  asset('asset-meeting',137,440,60/190*82,82,table(137,440,60/190*82,82),150,481,37);
  asset('asset-manager-table',170,704,61,33,table(170,704,61,33),199,720,37,false);
  asset('asset-coffee',15,541,15,15,box(15,541,15,15,33,'#b6c2b8','#9aa99e','#899c8d')+box(17,543,10,7,12,'#455f51','#3d5647','#324b3c','',33),22,548,53,false);
- asset('asset-water',15,532,7,7,box(15,532,7,7,20,'#c3dce1','#8eb7c2','#759ea9'),18,535,26,false);
  asset('asset-fridge',67,543,14,14,box(67,543,14,14,53,'#c6d0c3','#b7c4b2','#97ac90')+box(67,543,14,14,1,'#e0e5d8','#aabca2','#8ca181','',27),74,550,61,false);
  if(!assetState.deleted.includes('asset-pantry'))labels.push(nameTag('asset-pantry',40,542,62));
  asset('asset-purifier',195,508,10,10,purifier(200,513),200,513,46,false);
