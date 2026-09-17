@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 3,
+  "items": [
+    {
+      "id": "source-1-all-0",
+      "name": "생일용품",
+      "cabinet": 1,
+      "level": "all",
+      "note": "원본 표에서 상·중·하단 병합"
+    },
+    {
+      "id": "source-1-all-1",
+      "name": "주방용품",
+      "cabinet": 1,
+      "level": "all",
+      "note": "원본 표에서 상·중·하단 병합"
+    },
+    {
+      "id": "source-1-all-2",
+      "name": "등등",
+      "cabinet": 1,
+      "level": "all",
+      "note": "원본 표에서 상·중·하단 병합"
+    },
+    {
+      "id": "source-2-top-0",
+      "name": "종이가방",
+      "cabinet": 2,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-2-middle-0",
+      "name": "서류철",
+      "cabinet": 2,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-2-middle-1",
+      "name": "파일",
+      "cabinet": 2,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-2-middle-2",
+      "name": "봉투",
+      "cabinet": 2,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-2-middle-3",
+      "name": "방명록",
+      "cabinet": 2,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-2-bottom-0",
+      "name": "리갈패드",
+      "cabinet": 2,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-2-bottom-1",
+      "name": "명패",
+      "cabinet": 2,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-2-bottom-2",
+      "name": "펜트레이",
+      "cabinet": 2,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-3-top-0",
+      "name": "부조봉투",
+      "cabinet": 3,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-3-top-1",
+      "name": "보안수첩",
+      "cabinet": 3,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-3-top-2",
+      "name": "물티슈",
+      "cabinet": 3,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-3-middle-0",
+      "name": "이젤",
+      "cabinet": 3,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-3-middle-1",
+      "name": "화구통",
+      "cabinet": 3,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-3-bottom-0",
+      "name": "토너",
+      "cabinet": 3,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-4-top-0",
+      "name": "문구용품 서랍",
+      "cabinet": 4,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-4-middle-0",
+      "name": "문구용품 서랍",
+      "cabinet": 4,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-4-bottom-0",
+      "name": "문구용품 서랍",
+      "cabinet": 4,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-5-top-0",
+      "name": "생일용품",
+      "cabinet": 5,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-5-middle-0",
+      "name": "라벨지",
+      "cabinet": 5,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-5-middle-1",
+      "name": "멀티탭",
+      "cabinet": 5,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-5-bottom-0",
+      "name": "A4용지",
+      "cabinet": 5,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-6-top-0",
+      "name": "빔프로젝터",
+      "cabinet": 6,
+      "level": "top",
+      "note": "원본 표 표기: 빔플젝터"
+    },
+    {
+      "id": "source-6-middle-0",
+      "name": "케이블",
+      "cabinet": 6,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-6-bottom-0",
+      "name": "CD",
+      "cabinet": 6,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-7-top-0",
+      "name": "연구사업 계획서",
+      "cabinet": 7,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-7-middle-0",
+      "name": "기관평가 보고서",
+      "cabinet": 7,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-7-bottom-0",
+      "name": "연구사업 계획서",
+      "cabinet": 7,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-8-top-0",
+      "name": "KIST",
+      "cabinet": 8,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-8-middle-0",
+      "name": "내부",
+      "cabinet": 8,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-8-bottom-0",
+      "name": "간행물",
+      "cabinet": 8,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-9-middle-0",
+      "name": "기관평가",
+      "cabinet": 9,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-9-middle-1",
+      "name": "TEPRI",
+      "cabinet": 9,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-9-bottom-0",
+      "name": "원유형 소장님 자료들",
+      "cabinet": 9,
+      "level": "bottom",
+      "note": ""
+    },
+    {
+      "id": "source-10-top-0",
+      "name": "단행본 (미세먼지 / 추월의 방정식)",
+      "cabinet": 10,
+      "level": "top",
+      "note": ""
+    },
+    {
+      "id": "source-10-middle-0",
+      "name": "탄소중립",
+      "cabinet": 10,
+      "level": "middle",
+      "note": ""
+    },
+    {
+      "id": "source-10-bottom-0",
+      "name": "KIST 성과보고서",
+      "cabinet": 10,
+      "level": "bottom",
+      "note": ""
+    }
+  ],
+  "labels": {
+    "seat-0": "이동현",
+    "seat-1": "홍명은",
+    "seat-2": "이정우",
+    "seat-3": "장선아",
+    "seat-4": "김필서",
+    "seat-5": "김정우",
+    "seat-6": "최진욱",
+    "seat-7": "함주영",
+    "seat-8": "권혁연",
+    "seat-9": "박승재",
+    "seat-10": "공석",
+    "seat-11": "오정수",
+    "seat-12": "김종주",
+    "asset-meeting": "회의테이블",
+    "asset-manager-table": "실장실 테이블",
+    "asset-printer1": "복합기",
+    "asset-printer2": "프린터",
+    "asset-purifier": "공기청정기",
+    "asset-pantry": "탕비공간",
+    "asset-coffee": "커피머신",
+    "asset-water": "정수기",
+    "asset-fridge": "냉장고",
+    "asset-shredder": "파쇄함",
+    "room-team": "연구·기획분석팀",
+    "room-director": "실장실",
+    "cabinet-1": "캐비닛 01",
+    "cabinet-2": "캐비닛 02",
+    "cabinet-3": "캐비닛 03",
+    "cabinet-4": "캐비닛 04",
+    "cabinet-5": "캐비닛 05",
+    "cabinet-6": "캐비닛 06",
+    "cabinet-7": "캐비닛 07",
+    "cabinet-8": "캐비닛 08",
+    "cabinet-9": "캐비닛 09",
+    "cabinet-10": "캐비닛 10"
+  },
+  "assets": {
+    "custom": [],
+    "deleted": []
+  }
+}
