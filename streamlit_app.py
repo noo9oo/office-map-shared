@@ -19,7 +19,7 @@ def store():
 
 
 def main():
-     st.markdown("""
+    st.markdown("""
     <style>
     .block-container {
         padding: 4.5rem 1rem 2rem;
@@ -27,7 +27,6 @@ def main():
     }
     </style>
     """, unsafe_allow_html=True)
-    required = ("OFFICE_SHEET_ID", "OFFICE_PASSWORD", "gcp_service_account")
     try:
         configured = all(k in st.secrets for k in required)
     except Exception:
