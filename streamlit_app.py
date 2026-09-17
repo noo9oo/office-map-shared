@@ -5,6 +5,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from storage import connect
+from diagnostics import connection_message
 
 st.set_page_config(page_title="공용 사무실 비품 맵", page_icon="🗄️", layout="wide")
 ROOT = Path(__file__).parent
@@ -51,8 +52,10 @@ def main():
         st.rerun()
     try:
         shared = store()
-    except Exception:
-        st.error("구글 시트에 연결하지 못했습니다. OFFICE_SHEET_ID와 서비스 계정의 편집 권한을 확인해 주세요.")
+    except Exception as exc:
+        st.error(connection_message(exc))
+        if st.button("연결 다시 시도"):
+            st.rerun()
         st.stop()
 
     @st.fragment(run_every=8)
@@ -61,9 +64,13 @@ def main():
         try:
             snapshot = shared.snapshot()
             error = ""
-        except Exception:
+        except Exception as exc:
             snapshot = None
-            error = "공용 자료를 읽지 못했습니다. 연결 복구 후 자동으로 다시 확인합니다."
+            error = connection_message(exc)
+        if error:
+            st.error(error)
+            if st.button("자료 다시 불러오기", key="retry_snapshot"):
+                st.rerun(scope="fragment")
         request = office_map(snapshot=snapshot, ack=ack, error=error, key="office_map", default=None)
         if isinstance(request, dict) and request.get("id") != st.session_state.get("office_handled"):
             try:
