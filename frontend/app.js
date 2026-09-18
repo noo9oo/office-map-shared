@@ -313,3 +313,71 @@ function setMobilePanel(panel){document.body.dataset.mobilePanel=panel;document.
 document.querySelectorAll('[data-mobile-panel]').forEach(b=>b.onclick=()=>setMobilePanel(b.dataset.mobilePanel));
 setMobilePanel('map');
 $('assetType').onchange=()=>{$('assetDimensions').hidden=$('assetType').value!=='box';};
+
+// 모바일 두 손가락 확대·축소
+(() => {
+  const map = document.getElementById('map');
+  let pinching = false;
+  let previousDistance = 0;
+  let blockClickUntil = 0;
+
+  const distance = touches => Math.hypot(
+    touches[0].clientX - touches[1].clientX,
+    touches[0].clientY - touches[1].clientY
+  );
+
+  // 확대 중에는 기존 한 손가락 이동 처리를 중단합니다.
+  for (const type of ['pointerdown', 'pointermove', 'pointerup']) {
+    map.addEventListener(type, event => {
+      if (pinching && event.pointerType === 'touch') {
+        event.stopImmediatePropagation();
+      }
+    }, true);
+  }
+
+  map.addEventListener('touchstart', event => {
+    if (event.touches.length !== 2) return;
+
+    pinching = true;
+    previousDistance = distance(event.touches);
+    drag = null;
+    map.classList.remove('dragging');
+    document.getElementById('tooltip').hidden = true;
+    event.preventDefault();
+  }, { passive: false });
+
+  map.addEventListener('touchmove', event => {
+    if (!pinching) return;
+    event.preventDefault();
+
+    if (event.touches.length !== 2) return;
+    const nextDistance = distance(event.touches);
+
+    if (previousDistance > 0) {
+      zoomBy(nextDistance / previousDistance);
+    }
+    previousDistance = nextDistance;
+  }, { passive: false });
+
+  function finishPinch(event) {
+    if (!pinching) return;
+
+    blockClickUntil = Date.now() + 500;
+    if (event.touches.length === 0) {
+      pinching = false;
+      previousDistance = 0;
+      drag = null;
+    }
+  }
+
+  map.addEventListener('touchend', finishPinch);
+  map.addEventListener('touchcancel', finishPinch);
+
+  // 확대 직후 캐비닛이 실수로 선택되는 것을 방지합니다.
+  map.addEventListener('click', event => {
+    if (pinching || Date.now() < blockClickUntil) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+})();
