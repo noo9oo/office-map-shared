@@ -41,6 +41,17 @@ def validate(payload):
         if any(type(a.get(k)) not in (int, float) or not math.isfinite(a[k]) or not 8 <= a[k] <= 120 for k in ("w", "d")) or a["x"] + a["w"] > 297 or a["y"] + a["d"] > 755:
             raise ValueError("자산 크기가 올바르지 않습니다.")
         custom_ids.add(a["key"])
+        if "inventory" in a:
+            inventory = a["inventory"]
+            if a["type"] != "storage" or not isinstance(inventory, list) or len(inventory) > 100:
+                raise ValueError("수납장 비품 목록이 올바르지 않습니다.")
+            inventory_ids = set()
+            for entry in inventory:
+                if not isinstance(entry, dict) or not text(entry.get("id"), 150) or entry["id"] in inventory_ids or not text(entry.get("name"), 120) or not text(entry.get("note"), 500, True):
+                    raise ValueError("수납장 비품의 이름과 메모를 확인해 주세요.")
+                inventory_ids.add(entry["id"])
+            if len(json.dumps(a, ensure_ascii=False).encode("utf-8")) > 30000:
+                raise ValueError("수납장 비품 메모가 너무 많습니다. 내용을 줄여 주세요.")
     if set(labels) != LABEL_KEYS | custom_ids or any(not text(v, 60) for v in labels.values()):
         raise ValueError("좌석·자산 이름이 누락되었거나 올바르지 않습니다.")
     return payload
