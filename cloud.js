@@ -48,3 +48,12 @@ $('dismissConflict').onclick=()=>$('cloudConflict').hidden=true;
 function resizeFrame(){send('streamlit:setFrameHeight',{height:Math.max(880,Math.min(1250,window.innerHeight||1000))});}
 block('공용 자료를 불러오고 있습니다…');
 send('streamlit:componentReady',{apiVersion:1});resizeFrame();window.addEventListener('resize',resizeFrame);
+
+let mobileResizeTimer;
+new ResizeObserver(()=>{
+ if(!matchMedia('(max-width:760px)').matches)return;
+ clearTimeout(mobileResizeTimer);mobileResizeTimer=setTimeout(()=>{
+ const height=Math.ceil(document.querySelector('.app-header').getBoundingClientRect().height+document.querySelector('.mobile-tabs').getBoundingClientRect().height+document.querySelector('.workspace').getBoundingClientRect().height+24);
+ send('streamlit:setFrameHeight',{height});
+ },100);
+}).observe(document.querySelector('.workspace'));
