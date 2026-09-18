@@ -262,6 +262,10 @@ function rotateView(step){if(mode!=='iso')return;rotation=(rotation+step+4)%4;$(
 
 function refresh(){renderList();renderDetail();updateHighlights();}
 function tooltipFor(el,event){
+   if (el.dataset.cabinet) {
+    $('tooltip').hidden = true;
+    return;
+  }
  let html='';if(el.dataset.cabinet){const id=Number(el.dataset.cabinet);html=`<strong>${esc(labelName('cabinet-'+id))} · ${id}번</strong>`+Object.entries(LEVELS).map(([level,title])=>{const arr=items.filter(i=>i.cabinet===id&&i.level===level);return level==='all'&&!arr.length?'':`<p>${title} — ${esc(arr.map(i=>i.name).join(' · ')||(id===1?'단별 미지정':'비어 있음'))}</p>`;}).join('');}else{html=`<strong>${esc(labelName(el.dataset.labelKey))}</strong><p>클릭하여 이름 수정</p>`;}
  const tip=$('tooltip');tip.innerHTML=html;tip.hidden=false;const frame=$('mapFrame').getBoundingClientRect(),rect=el.getBoundingClientRect(),x=(event?.clientX||rect.x+rect.width/2)-frame.x+15,y=(event?.clientY||rect.y)-frame.y+15;tip.style.left=Math.max(5,Math.min(x,frame.width-235))+'px';tip.style.top=Math.max(5,Math.min(y,frame.height-tip.offsetHeight-10))+'px';
 }
