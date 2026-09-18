@@ -168,3 +168,11 @@
     line-height: 1;
   }
 }
+/* Static name tags: only the furniture itself shows a tooltip. */
+.map-labels [data-name-tag]{pointer-events:auto;cursor:default}
+.seat,.asset-object{cursor:default}
+.asset-object[role=button]{cursor:pointer}
+.seat-label:hover rect{fill:#fffef7e8;stroke:#ccd8c9}
+.seat-label:hover text{fill:#64735e;font-size:7px;font-weight:550}
+.asset-label:hover rect{fill:#f9fbf7ef;stroke:#d9e3d8;stroke-width:.5}
+#storageInventoryRename{display:none}

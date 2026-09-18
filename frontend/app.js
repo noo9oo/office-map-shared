@@ -7,7 +7,7 @@ const CABINETS=[
  {id:2,x:14,y:497,w:22,d:14,location:'이정우 좌석 아래 · 왼쪽'},
  {id:3,x:37,y:497,w:22,d:14,location:'이정우 좌석 아래 · 가운데'},
  {id:4,x:60,y:497,w:22,d:14,location:'이정우 좌석 아래 · 오른쪽'},
- {id:5,x:158,y:541,w:33,d:16,location:'공석 위 · 회의공간 아래'},
+ {id:5,x:158,y:541,w:14,d:16,location:'공석 위 · 회의공간 아래'},
  {id:6,x:193,y:523,w:14,d:16,location:'박승재 앞 · 공기청정기 옆 위쪽'},
  {id:7,x:193,y:540,w:14,d:16,location:'박승재 앞 · 공기청정기 옆 아래쪽'},
  {id:8,x:140,y:638,w:23,d:16,location:'실장실 앞 · 왼쪽'},
@@ -36,10 +36,10 @@ const ASSETS=[
  {key:'asset-printer2',name:'프린터',x:118,y:373,w:19,d:23},
  {key:'asset-purifier',name:'공기청정기',x:195,y:508,w:10,d:10},
  {key:'asset-pantry',name:'탕비공간',x:15,y:532,w:66,d:25},
- {key:'asset-coffee',name:'커피머신',x:15,y:541,w:15,d:15},
+ {key:'asset-coffee',name:'커피머신',x:67,y:543,w:15,d:15},
  {key:'asset-water',name:'정수기',x:15,y:532,w:7,d:7},
- {key:'asset-fridge',name:'냉장고',x:67,y:543,w:14,d:14},
- {key:'asset-shredder',name:'파쇄함',x:120,y:580,w:18,d:13},
+ {key:'asset-fridge',name:'냉장고',x:15,y:541,w:14,d:14},
+ {key:'asset-shredder',name:'파쇄함',x:134,y:541,w:18,d:13},
  {key:'room-team',name:'연구·기획분석팀',x:150,y:285,w:120,d:50},
  {key:'room-director',name:'실장실',x:145,y:663,w:150,d:85}
 ];
@@ -135,23 +135,23 @@ function line(a,b,color='#7f938b',width=.8,dash=''){const q=p(...a),r=p(...b);re
 function label(text,x,y,z=0,cls='feature-label'){const q=p(x,y,z);return `<text x="${q[0]}" y="${q[1]}" text-anchor="middle" class="${cls}">${esc(text)}</text>`;}
 function nameTag(key,x,y,z,cls='asset-label',attrs=''){
  const text=labelName(key),q=p(x,y,mode==='plan'?0:z),width=Math.min(126,Math.max(34,Array.from(text).length*7+12));
- return `<g class="${cls}" data-label-key="${key}" ${attrs} role="button" tabindex="0" aria-label="${esc(text)} 이름 수정"><title>${esc(text)} · 클릭하여 이름 수정</title><rect x="${q[0]-width/2}" y="${q[1]-6.5}" width="${width}" height="13" rx="3.5"/><text x="${q[0]}" y="${q[1]+2.5}" text-anchor="middle">${esc(text)}</text></g>`;
+ return `<g class="${cls}" data-label-key="${key}" ${attrs} data-name-tag="true" aria-label="${esc(text)}"><rect x="${q[0]-width/2}" y="${q[1]-6.5}" width="${width}" height="13" rx="3.5"/><text x="${q[0]}" y="${q[1]+2.5}" text-anchor="middle">${esc(text)}</text></g>`;
 }
 function shadow(x,y,w,d){return poly([[x+2,y+2,.05],[x+w+3,y+2,.05],[x+w+3,y+d+3,.05],[x+2,y+d+3,.05]],'#647b6410','', 'none');}
-function desk(x,y,w,d){
+function desk(x,y,w,d,mirror=false){
  let out='';const alongY=d>w;
  if(mode==='iso')for(const[a,b]of[[x+2,y+2],[x+w-4,y+2],[x+2,y+d-4],[x+w-4,y+d-4]])out+=box(a,b,1.8,1.8,28,'#bbc0b3','#acb2a6','#8f9c8c');
  out+=box(x+3,y+d-14,Math.min(w-6,12),11,25,'#e0e2d5','#d9ddcf','#bcc9b7');
  out+=box(x,y,w,d,2.4,'#e2caa6','#cbb38f','#baa78a','desk-top',28.5);
- const mx=alongY?x+w-8:x+w/2-9,my=alongY?y+d/2-10:y+6,mw=alongY?2.4:18,md=alongY?20:2.4;
+ const mx=alongY?(mirror?x+5.6:x+w-8):x+w/2-9,my=alongY?y+d/2-10:y+6,mw=alongY?2.4:18,md=alongY?20:2.4;
  out+=box(mx-1,my+1,mw+2,md+2,.9,'#92a59a','#778e80','#6d8474','',31);
  out+=box(mx+mw/2-1,my+md/2-1,2,2,3,'#7d9487','#678172','#526c5d','',32);
  out+=box(mx,my,mw,md,11,'#4f6862','#3d5450','#334b48','',35);
  // Screen inset and monitor rim stay attached to the desktop at every angle.
  if(mode==='plan')out+=poly([[mx,my],[mx+mw,my],[mx+mw,my+md],[mx,my+md]],'#334f49');
- else if(alongY){const xx=mx+mw;out+=poly([[xx,my+1,36],[xx,my+md-1,36],[xx,my+md-1,45],[xx,my+1,45]],'#69897e');}
+ else if(alongY){const xx=mirror?mx:mx+mw;out+=poly([[xx,my+1,36],[xx,my+md-1,36],[xx,my+md-1,45],[xx,my+1,45]],'#69897e');}
  else if([0,3].includes(rotation))out+=poly([[mx+1,my+md,36],[mx+mw-1,my+md,36],[mx+mw-1,my+md,45],[mx+1,my+md,45]],'#69897e');
- const kx=alongY?x+5:x+w/2-7,ky=alongY?y+d/2-7:y+14,kw=alongY?4:14,kd=alongY?14:4;
+ const kx=alongY?(mirror?x+w-9:x+5):x+w/2-7,ky=alongY?y+d/2-7:y+14,kw=alongY?4:14,kd=alongY?14:4;
  out+=box(kx,ky,kw,kd,.6,'#c5d0bc','#b7c4ad','#aab99f','',31);
  out+=box(x+4,y+d-9,7,5,.6,'#f5f2e4','#e5dfcd','#d3d1bb','',31)+box(x+4.5,y+d-8.5,6,4,.4,'#faf7ed','#ece8d8','#dbdac9','',31.7);
  return out;
@@ -177,7 +177,7 @@ function printer(x,y){
  return out;
 }
 function cabinetGeometry(c){
- const {x,y,w,d}=c,face=c.id>=8?'north':(c.id===6||c.id===7)?'west':'south';
+ const {x,y,w,d}=c,face=(c.id===5||c.id>=8)?'north':(c.id===6||c.id===7)?'west':'south';
  let html=box(x+.7,y+.5,w-1.4,d-1,2,'#8b9d84','#93a189','#7b9075');
  html+=box(x,y,w,d,32,'#d1dfce','#ebeddf','#b9cbb0','',2);
  html+=box(x-.3,y-.3,w+.6,d+.6,1.5,'#c6d7c3','#91aa8a','#7e9878','cab-top',34);
@@ -225,21 +225,26 @@ function renderMap(){
  if(full)wall(14,15,283,3,12,'outer-wall');
  // Cabinets 8–10 are outside the north-facing room wall; the manager sits south of it.
  wall(139,656,158,4,43,'manager-wall');wall(140,699,3,56,29,'manager-wall');wall(143,752,154,3,13,'manager-wall');
- floor+=line([140,660],[140,697],'#8aa393',.8,'3 2')+line([140,697],[158,684],'#7e9886',1.8);
- labels.push(label('문',132,682,0));
- SEATS.forEach((s,index)=>{add(s.x,s.y,s.w,s.d,desk(s.x,s.y,s.w,s.d),`class="seat" data-seat-index="${index}" data-label-key="seat-${index}" role="button" tabindex="0" aria-label="${esc(seatName(index))} 이름 수정"`);labels.push(nameTag(`seat-${index}`,s.x+s.w/2,s.y+s.d/2,49,'seat-label',`data-seat-index="${index}"`));});
- function asset(key,x,y,w,d,html,lx=x+w/2,ly=y+d/2,lz=43,tag=true){if(assetState.deleted.includes(key))return;add(x,y,w,d,html,`class="asset-object" data-label-key="${key}" role="button" tabindex="0" aria-label="${esc(labelName(key))} 이름 수정"`);if(tag)labels.push(nameTag(key,lx,ly,lz));}
+ floor+=line([140,660],[140,697],'#8aa393',.8,'3 2');
+ floor+=line([140,697],[103,697],'#7e9886',1.8);
+ for(let i=0;i<16;i++){
+  const a=-Math.PI/2-i*Math.PI/32,b=a-Math.PI/32;
+  floor+=line([140+37*Math.cos(a),697+37*Math.sin(a)],[140+37*Math.cos(b),697+37*Math.sin(b)],'#8aa393',.6);
+ }
+ labels.push(label('문',123,682,0));
+ SEATS.forEach((s,index)=>{add(s.x,s.y,s.w,s.d,desk(s.x,s.y,s.w,s.d,[7,8,9].includes(index)),`class="seat" data-seat-index="${index}" data-label-key="seat-${index}" role="img" tabindex="0" aria-label="${esc(seatName(index))}"`);labels.push(nameTag(`seat-${index}`,s.x+s.w/2,s.y+s.d/2,49,'seat-label',`data-seat-index="${index}"`));});
+ function asset(key,x,y,w,d,html,lx=x+w/2,ly=y+d/2,lz=43,tag=true){if(assetState.deleted.includes(key))return;add(x,y,w,d,html,`class="asset-object" data-label-key="${key}" role="${assetState.custom.some(a=>a.key===key&&a.type==='storage')?'button':'img'}" tabindex="0" aria-label="${esc(labelName(key))}"`);if(tag)labels.push(nameTag(key,lx,ly,lz));}
  asset('asset-meeting',137,440,60/190*82,82,table(137,440,60/190*82,82),150,481,37);
  asset('asset-manager-table',170,704,61,33,table(170,704,61,33),199,720,37,false);
- asset('asset-coffee',15,541,15,15,box(15,541,15,15,33,'#b6c2b8','#9aa99e','#899c8d')+box(17,543,10,7,12,'#455f51','#3d5647','#324b3c','',33),22,548,53,false);
- asset('asset-fridge',67,543,14,14,box(67,543,14,14,53,'#c6d0c3','#b7c4b2','#97ac90')+box(67,543,14,14,1,'#e0e5d8','#aabca2','#8ca181','',27),74,550,61,false);
+ asset('asset-coffee',67,543,15,15,box(67,543,15,15,33,'#b6c2b8','#9aa99e','#899c8d')+box(69,545,10,7,12,'#455f51','#3d5647','#324b3c','',33),74,550,53,false);
+ asset('asset-fridge',15,541,14,14,box(15,541,14,14,53,'#c6d0c3','#b7c4b2','#97ac90')+box(15,541,14,14,1,'#e0e5d8','#aabca2','#8ca181','',27),22,548,61,false);
  if(!assetState.deleted.includes('asset-pantry'))labels.push(nameTag('asset-pantry',40,542,62));
  asset('asset-purifier',195,508,10,10,purifier(200,513),200,513,46,false);
  asset('asset-printer1',118,597,19,23,printer(118,597),125,612,39);
- asset('asset-printer2',118,373,19,23,printer(118,373),125,385,39,false);
- asset('asset-shredder',120,580,18,13,box(120,580,18,13,24,'#d6d4c7','#bebdab','#a9ae9b')+box(122,584,14,2,.4,'#788974','#788974','#788974','',24),128,587,34,false);
+ asset('asset-printer2',118,373,19,23,printer(118,373),125,385,39,true);
+ asset('asset-shredder',134,541,18,13,box(134,541,18,13,24,'#d6d4c7','#bebdab','#a9ae9b')+box(136,545,14,2,.4,'#788974','#788974','#788974','',24),143,547,34,false);
  for(const a of assetState.custom){const html=a.type==='table'?table(a.x,a.y,a.w,a.d):a.type==='printer'?printer(a.x,a.y):a.type==='purifier'?purifier(a.x+10,a.y+12):box(a.x,a.y,a.w,a.d,30,'#c6d7c3','#ebeddf','#b9cbb0','asset-top');asset(a.key,a.x,a.y,a.w,a.d,html,a.x+a.w/2,a.y+a.d/2,44);}
- CABINETS.forEach(c=>{add(c.x,c.y,c.w,c.d,cabinetGeometry(c),`class="cabinet-object" data-cabinet="${c.id}" data-facing="${c.id>=8?'north':c.id===6||c.id===7?'west':'south'}" role="button" tabindex="0" aria-label="${esc(labelName('cabinet-'+c.id))} 상세 보기"`);const q=p(c.x+c.w/2,c.y+c.d/2,48);labels.push(`<g class="cab-label" data-cabinet="${c.id}" role="button" tabindex="0" aria-label="캐비닛 ${c.id} 상세 보기"><rect x="${q[0]-9}" y="${q[1]-8}" width="18" height="16" rx="5"/><text x="${q[0]}" y="${q[1]+3.5}" text-anchor="middle">${c.id}</text></g>`);});
+ CABINETS.forEach(c=>{add(c.x,c.y,c.w,c.d,cabinetGeometry(c),`class="cabinet-object" data-cabinet="${c.id}" data-facing="${(c.id===5||c.id>=8)?'north':c.id===6||c.id===7?'west':'south'}" role="button" tabindex="0" aria-label="${esc(labelName('cabinet-'+c.id))} 상세 보기"`);const q=p(c.x+c.w/2,c.y+c.d/2,48);labels.push(`<g class="cab-label" data-cabinet="${c.id}" role="button" tabindex="0" aria-label="캐비닛 ${c.id} 상세 보기"><rect x="${q[0]-9}" y="${q[1]-8}" width="18" height="16" rx="5"/><text x="${q[0]}" y="${q[1]+3.5}" text-anchor="middle">${c.id}</text></g>`);});
  $('scene').innerHTML=`<defs><linearGradient id="purifierTone"><stop stop-color="#e8eddf"/><stop offset=".6" stop-color="#f6f6e9"/><stop offset="1" stop-color="#bdcbb2"/></linearGradient></defs><g>${floor}</g>${objs.sort((a,b)=>a.depth-b.depth).map(o=>o.html).join('')}<g class="map-labels">${labels.join('')}</g>`;
  $('scene').classList.toggle('hide-names',!$('namesToggle').checked);updateHighlights();
 }
@@ -262,11 +267,11 @@ function rotateView(step){if(mode!=='iso')return;rotation=(rotation+step+4)%4;$(
 
 function refresh(){renderList();renderDetail();updateHighlights();}
 function tooltipFor(el,event){
-   if (el.dataset.cabinet) {
+   if (el.dataset.cabinet || el.hasAttribute('data-name-tag')) {
     $('tooltip').hidden = true;
     return;
   }
- let html='';if(el.dataset.cabinet){const id=Number(el.dataset.cabinet);html=`<strong>${esc(labelName('cabinet-'+id))} · ${id}번</strong>`+Object.entries(LEVELS).map(([level,title])=>{const arr=items.filter(i=>i.cabinet===id&&i.level===level);return level==='all'&&!arr.length?'':`<p>${title} — ${esc(arr.map(i=>i.name).join(' · ')||(id===1?'단별 미지정':'비어 있음'))}</p>`;}).join('');}else{html=`<strong>${esc(labelName(el.dataset.labelKey))}</strong><p>클릭하여 이름 수정</p>`;}
+ let html='';if(el.dataset.cabinet){const id=Number(el.dataset.cabinet);html=`<strong>${esc(labelName('cabinet-'+id))} · ${id}번</strong>`+Object.entries(LEVELS).map(([level,title])=>{const arr=items.filter(i=>i.cabinet===id&&i.level===level);return level==='all'&&!arr.length?'':`<p>${title} — ${esc(arr.map(i=>i.name).join(' · ')||(id===1?'단별 미지정':'비어 있음'))}</p>`;}).join('');}else{html=`<strong>${esc(labelName(el.dataset.labelKey))}</strong>`;}
  const tip=$('tooltip');tip.innerHTML=html;tip.hidden=false;const frame=$('mapFrame').getBoundingClientRect(),rect=el.getBoundingClientRect(),x=(event?.clientX||rect.x+rect.width/2)-frame.x+15,y=(event?.clientY||rect.y)-frame.y+15;tip.style.left=Math.max(5,Math.min(x,frame.width-235))+'px';tip.style.top=Math.max(5,Math.min(y,frame.height-tip.offsetHeight-10))+'px';
 }
 $('itemCabinet').innerHTML=CABINETS.map(c=>`<option value="${c.id}">캐비닛 ${c.id}</option>`).join('');
@@ -307,10 +312,10 @@ $('map').addEventListener('pointerdown',e=>{if(e.button!==0)return;drag={x:e.cli
 $('map').addEventListener('pointermove',e=>{if(drag){if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>5){if(!drag.moved){$('map').setPointerCapture(e.pointerId);drag.moved=true;$('map').classList.add('dragging');}const pt=svgPoint(e);camera[0]+=drag.point.x-pt.x;camera[1]+=drag.point.y-pt.y;applyCamera();$('tooltip').hidden=true;}return;}const el=e.target.closest('[data-cabinet],[data-label-key]');if(el)tooltipFor(el,e);else $('tooltip').hidden=true;});
 function endDrag(){if(drag){suppressClick=drag.moved;if($('map').hasPointerCapture(drag.id))$('map').releasePointerCapture(drag.id);}drag=null;$('map').classList.remove('dragging');setTimeout(()=>suppressClick=false,0);}
 $('map').addEventListener('pointerup',endDrag);$('map').addEventListener('pointercancel',endDrag);$('map').addEventListener('pointerleave',()=>{$('tooltip').hidden=true;if(drag&&!drag.moved)drag=null;});
-$('map').addEventListener('click',e=>{if(suppressClick)return;if(pendingAsset){placeAsset(e);return;}const el=e.target.closest('[data-cabinet],[data-label-key]');if(el?.dataset.cabinet)selectCabinet(Number(el.dataset.cabinet));else if(el?.dataset.labelKey)openLabels(el.dataset.labelKey);});
+$('map').addEventListener('click',e=>{if(suppressClick||e.target.closest('[data-name-tag]'))return;if(pendingAsset){placeAsset(e);return;}const el=e.target.closest('[data-cabinet],[data-label-key]');if(el?.dataset.cabinet)selectCabinet(Number(el.dataset.cabinet));});
 $('map').addEventListener('wheel',e=>{e.preventDefault();zoomBy(e.deltaY<0?1.08:1/1.08);},{passive:false});
 $('map').addEventListener('focusin',e=>{const el=e.target.closest('[data-cabinet],[data-label-key]');if(el)tooltipFor(el);});$('map').addEventListener('focusout',()=>$('tooltip').hidden=true);
-$('map').addEventListener('keydown',e=>{const el=e.target.closest('[data-cabinet],[data-label-key]');if(el&&(e.key==='Enter'||e.key===' ')){e.preventDefault();if(el.dataset.cabinet)selectCabinet(Number(el.dataset.cabinet));else openLabels(el.dataset.labelKey);}if(e.key==='Escape')$('tooltip').hidden=true;});
+$('map').addEventListener('keydown',e=>{const el=e.target.closest('[data-cabinet],[data-label-key]');if(el&&!el.hasAttribute('data-name-tag')&&(e.key==='Enter'||e.key===' ')){e.preventDefault();if(el.dataset.cabinet)selectCabinet(Number(el.dataset.cabinet));}if(e.key==='Escape')$('tooltip').hidden=true;});
 renderMap();resetCamera();refresh();updateSaveStatus();
 
 function setMobilePanel(panel){document.body.dataset.mobilePanel=panel;document.querySelectorAll('[data-mobile-panel]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mobilePanel===panel)));}
@@ -385,3 +390,10 @@ $('assetType').onchange=()=>{$('assetDimensions').hidden=$('assetType').value!==
     }
   }, true);
 })();
+// Name editing is centralized in the toolbar.
+const nameEditHint=document.querySelector('.rename-hint');
+if(nameEditHint)nameEditHint.textContent='좌석·자산 이름은 위쪽 이름 편집에서 바꿀 수 있어요.';
+const nameEditFooter=document.querySelector('.map-footer span:last-child');
+if(nameEditFooter)nameEditFooter.textContent='이름 변경은 위쪽 이름 편집';
+const nameEditGuide=document.querySelector('#helpDialog .guide li:nth-child(4) p');
+if(nameEditGuide)nameEditGuide.textContent='이름 편집에서 좌석·자산 이름을 변경하세요. 실제 물체에 마우스를 올리면 이름이 표시됩니다. 시점 버튼으로 90도씩 회전할 수 있습니다.';

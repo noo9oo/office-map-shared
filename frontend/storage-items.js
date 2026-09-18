@@ -85,7 +85,7 @@
 
   // Capture before the original map handler opens the asset-name editor.
   function intercept(e) {
-    if(pendingAsset || suppressClick)return;
+    if(pendingAsset || suppressClick || e.target.closest('[data-name-tag]'))return;
     if(e.type==='keydown' && !['Enter',' '].includes(e.key))return;
     const key=e.target.closest('[data-label-key]')?.dataset.labelKey;
     if(!storage(key))return;
