@@ -101,3 +101,35 @@
  .map-controls{max-width:calc(100% - 12px);gap:0;padding:3px}
  .map-controls button{padding:6px}.rotation-controls{right:10px}
 }
+
+/* 모바일 상세 목록 스크롤과 시점 버튼 */
+@media (max-width:760px) {
+  body[data-mobile-panel="detail"] .detail {
+    height: 520px;
+    max-height: 520px;
+    min-height: 0;
+    overflow-y: auto;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 40px;
+  }
+
+  .rotation-controls {
+    align-items: center;
+    padding: 4px;
+    gap: 4px;
+    height: 52px;
+  }
+
+  .rotation-controls button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    font-size: 24px;
+    line-height: 1;
+    flex: none;
+  }
+}
