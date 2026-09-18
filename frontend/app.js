@@ -225,13 +225,41 @@ function renderMap(){
  if(full)wall(14,15,283,3,12,'outer-wall');
  // Cabinets 8–10 are outside the north-facing room wall; the manager sits south of it.
  wall(139,656,158,4,43,'manager-wall');wall(140,699,3,56,29,'manager-wall');wall(143,752,154,3,13,'manager-wall');
- floor+=line([140,660],[140,697],'#8aa393',.8,'3 2');
- floor+=line([140,697],[103,697],'#7e9886',1.8);
+ // 실장실 문 옆 벽 한 칸 추가
+ wall(140,660,3,18,43,'manager-wall');
+
+ // 줄어든 문: 폭 19, 경첩은 연장한 벽 쪽
+ const doorX=143;
+ const doorY=678;
+ const doorWidth=19;
+
+ // 문이 닫혔을 때의 위치
+ floor+=line(
+  [doorX,doorY],
+  [doorX,doorY+doorWidth],
+  '#8aa393',.8,'3 2'
+ );
+
+ // 실장실 안쪽으로 열린 문
+ floor+=line(
+  [doorX,doorY],
+  [doorX+doorWidth,doorY],
+  '#7e9886',1.8
+ );
+
+ // 문 열림 회전선
  for(let i=0;i<16;i++){
-  const a=-Math.PI/2-i*Math.PI/32,b=a-Math.PI/32;
-  floor+=line([140+37*Math.cos(a),697+37*Math.sin(a)],[140+37*Math.cos(b),697+37*Math.sin(b)],'#8aa393',.6);
+  const a=Math.PI/2-i*Math.PI/32;
+  const b=a-Math.PI/32;
+
+  floor+=line(
+   [doorX+doorWidth*Math.cos(a),doorY+doorWidth*Math.sin(a)],
+   [doorX+doorWidth*Math.cos(b),doorY+doorWidth*Math.sin(b)],
+   '#8aa393',.6
+  );
  }
- labels.push(label('문',123,682,0));
+
+ labels.push(label('문',153,689,0));
  SEATS.forEach((s,index)=>{add(s.x,s.y,s.w,s.d,desk(s.x,s.y,s.w,s.d,[7,8,9].includes(index)),`class="seat" data-seat-index="${index}" data-label-key="seat-${index}" role="img" tabindex="0" aria-label="${esc(seatName(index))}"`);labels.push(nameTag(`seat-${index}`,s.x+s.w/2,s.y+s.d/2,49,'seat-label',`data-seat-index="${index}"`));});
  function asset(key,x,y,w,d,html,lx=x+w/2,ly=y+d/2,lz=43,tag=true){if(assetState.deleted.includes(key))return;add(x,y,w,d,html,`class="asset-object" data-label-key="${key}" role="${assetState.custom.some(a=>a.key===key&&a.type==='storage')?'button':'img'}" tabindex="0" aria-label="${esc(labelName(key))}"`);if(tag)labels.push(nameTag(key,lx,ly,lz));}
  asset('asset-meeting',137,440,60/190*82,82,table(137,440,60/190*82,82),150,481,37);
