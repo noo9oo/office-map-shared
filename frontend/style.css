@@ -133,3 +133,38 @@
     flex: none;
   }
 }
+/* PC: 지도 위 캐비닛 번호표 축소 */
+@media (min-width:761px) {
+  .map-labels .cab-label {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.75);
+  }
+}
+
+/* 모바일: 시점 화살표를 36 × 36px 정사각형으로 고정 */
+@media (max-width:760px) {
+  .rotation-controls {
+    height: 44px;
+    min-height: 44px;
+    padding: 3px;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .rotation-controls button {
+    box-sizing: border-box;
+    flex: 0 0 36px;
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    line-height: 1;
+  }
+}
