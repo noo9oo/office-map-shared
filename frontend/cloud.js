@@ -1,6 +1,6 @@
 'use strict';
 // Streamlit Components v1's public postMessage transport. No Google credentials reach JS.
-const cloud={snapshot:null,deferred:null,pending:null,rejected:null,origin:'*',ready:false};
+const cloud={snapshot:null,deferred:null,pending:null,rejected:null,origin:'*',ready:false,actor:''};
 function send(type,extra={}){window.parent.postMessage({isStreamlitMessage:true,type,...extra},cloud.origin);}
 function records(data){const r={};data.items.forEach(i=>r['item/'+i.id]=i);Object.entries(data.labels).forEach(([k,v])=>r['label/'+k]=v);data.assets.custom.forEach(a=>r['asset/'+a.key]=a);data.assets.deleted.forEach(k=>r['removed/'+k]=true);return r;}
 function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])]));return value;}
@@ -11,7 +11,12 @@ function saveShared(){
  const next=packet(),before=records(cloud.snapshot.payload),after=records(next),changes=[];
  for(const key of new Set([...Object.keys(before),...Object.keys(after)])){if(!equal(before[key],after[key]))changes.push({key,expected:cloud.snapshot.revisions[key]||null,value:after[key]??null});}
  if(!changes.length){storageProblem='';return;}
- const request={id:crypto.randomUUID(),changes};
+ if(!cloud.actor){
+  storageProblem='수정 기록에 표시할 이름을 입력해 주세요.';
+  requestEditorName(()=>saveShared(),()=>applySnapshot(cloud.deferred||cloud.snapshot,true));
+  return;
+ }
+ const request={id:crypto.randomUUID(),changes,actor:cloud.actor};
  cloud.pending={request,draft:structuredClone(next)};
  storageProblem='공용 저장 확인 중…';updateSaveStatus();block('공용 저장 확인 중…');
  send('streamlit:setComponentValue',{value:request,dataType:'json'});
@@ -25,6 +30,7 @@ function applySnapshot(snapshot,force=false){
 }
 function editing(){return !!document.querySelector('dialog[open]')||!!pendingAsset||!!drag;}
 function receive(args){
+ if(typeof args.actor==='string'&&args.actor.trim())cloud.actor=args.actor.trim();
  const snapshot=args.snapshot,ack=args.ack;
  if(args.error){$('saveStatus').textContent=args.error;$('saveStatus').classList.add('error');block(args.error+' · 약 8초마다 다시 확인합니다.');return;}
  if(!snapshot)return;
@@ -57,3 +63,43 @@ new ResizeObserver(()=>{
  send('streamlit:setFrameHeight',{height});
  },100);
 }).observe(document.querySelector('.workspace'));
+
+// Ask once on the first editing action; viewing never asks for a name.
+const editorDialog=document.createElement('dialog');
+editorDialog.id='editorNameDialog';
+editorDialog.innerHTML=`<form id="editorNameForm"><div class="dialog-heading"><h2>수정 기록에 표시할 이름</h2></div><p class="muted">누가 수정했는지 기록할 이름을 입력해 주세요. 로그아웃 전까지 다시 묻지 않습니다.</p><label>이름<input id="editorNameInput" maxlength="40" required autocomplete="name" style="font-size:16px"></label><div class="dialog-actions"><button type="button" id="editorNameCancel">취소</button><button type="submit" class="primary">편집 시작</button></div></form>`;
+document.body.append(editorDialog);
+let editorContinue=null,editorCancel=null,editorClosing=false;
+function requestEditorName(proceed,cancel=()=>{}){
+ if(cloud.actor){proceed();return;}
+ if(editorDialog.open)return;
+ editorContinue=proceed;editorCancel=cancel;
+ $('editorNameInput').value='';editorDialog.showModal();$('editorNameInput').focus();
+}
+function cancelEditorName(){
+ const cancel=editorCancel;editorContinue=editorCancel=null;editorClosing=true;editorDialog.close();cancel?.();
+ if(document.activeElement?.matches('#storageInventoryName,#storageInventoryNote'))document.activeElement.blur();
+ queueMicrotask(()=>editorClosing=false);
+}
+$('editorNameCancel').onclick=cancelEditorName;
+editorDialog.addEventListener('cancel',event=>{event.preventDefault();cancelEditorName();});
+$('editorNameForm').onsubmit=event=>{
+ event.preventDefault();const name=$('editorNameInput').value.trim();
+ if(!name){$('editorNameInput').setCustomValidity('이름을 입력해 주세요.');$('editorNameInput').reportValidity();return;}
+ cloud.actor=name;const proceed=editorContinue;editorContinue=editorCancel=null;editorDialog.close();proceed?.();
+};
+$('editorNameInput').oninput=()=>$('editorNameInput').setCustomValidity('');
+const editTriggers='[data-add],[data-edit],[data-delete],[data-rename],#labelsBtn,#assetsBtn,#importBtn,#restoreBtn,[data-storage-edit],[data-storage-delete],#storageInventoryRename,#storageInventoryName,#storageInventoryNote';
+document.addEventListener('click',event=>{
+ if(cloud.actor||!cloud.ready)return;
+ const control=event.target.closest(editTriggers);if(!control)return;
+ event.preventDefault();event.stopImmediatePropagation();
+ requestEditorName(()=>{if(control.matches('input,textarea'))control.focus();else control.click();});
+},true);
+
+document.addEventListener('focusin',event=>{
+ if(cloud.actor||!cloud.ready||editorClosing||editorDialog.open)return;
+ if(event.target.matches('#storageInventoryName,#storageInventoryNote')){
+  const input=event.target;requestEditorName(()=>input.focus());
+ }
+},true);
