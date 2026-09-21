@@ -76,10 +76,6 @@ def main():
         st.title("사무실 비품 맵")
 
         with st.form("login"):
-            actor = st.text_input(
-                "수정 기록에 표시할 이름",
-                max_chars=40,
-            )
             supplied = st.text_input(
                 "공용 접속 비밀번호",
                 type="password",
@@ -91,19 +87,19 @@ def main():
                     password.encode(),
                 )
 
-                if actor.strip() and valid_password:
+                if valid_password:
                     st.session_state.office_authenticated = True
-                    st.session_state.office_actor = actor.strip()
+                    st.session_state.pop("office_actor", None)
                     st.rerun()
                 else:
-                    st.error("이름과 비밀번호를 확인해 주세요.")
+                    st.error("비밀번호를 확인해 주세요.")
 
         st.stop()
 
     top, logout = st.columns([9, 1])
 
     top.caption(
-        f"{st.session_state.office_actor} · 공용 구글 시트 저장 · "
+        "공용 구글 시트 저장 · "
         "약 8~16초 간격으로 변경 확인"
     )
 
@@ -142,6 +138,7 @@ def main():
             snapshot=snapshot,
             ack=ack,
             error=error,
+            actor=st.session_state.get("office_actor", ""),
             key="office_map",
             default=None,
         )
@@ -151,6 +148,10 @@ def main():
             and request.get("id") != st.session_state.get("office_handled")
         ):
             try:
+                actor = st.session_state.get("office_actor") or request.get("actor")
+                if not isinstance(actor, str) or not actor.strip() or len(actor) > 40:
+                    raise ValueError("수정 기록에 표시할 이름을 1~40자로 입력해 주세요.")
+                st.session_state.office_actor = actor.strip()
                 result = shared.commit(
                     request,
                     st.session_state.office_actor,
